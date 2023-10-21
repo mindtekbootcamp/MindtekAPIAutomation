@@ -220,4 +220,18 @@ public class YardsAPISteps {
         Assert.assertEquals(expectedNumberOfYards, results.size());
     }
 
+    @Given("user gets yards with get yard api call without authorization token")
+    public void user_gets_yards_with_get_yard_api_call_without_authorization_token() {
+        response=given().baseUri("http://3.17.122.25/en-us/api/v2")
+                .and().accept("application/json")
+                .and().log().all()
+                .when().get("/yards/");
+        response.then().log().all();
+    }
+    @Then("user validates {string} authorization error message")
+    public void user_validates_authorization_error_message(String expectedErrorMessage) {
+        String actualErrorMessage=response.body().jsonPath().getString("detail");
+        Assert.assertEquals(expectedErrorMessage,actualErrorMessage);
+    }
+
 }

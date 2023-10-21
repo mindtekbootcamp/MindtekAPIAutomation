@@ -30,4 +30,10 @@ Feature: Validating Yard APIs
     | 100   |
     | 0     |
 
+      @TC-104 @smoke @regression
+        Scenario: Validating Get Yards api call without authorization token
+        Given user gets yards with get yard api call without authorization token
+        Then user validates status code 401
+        And user validates "Authentication credentials were not provided." authorization error message
+
 
