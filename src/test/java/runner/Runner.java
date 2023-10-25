@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
         features = "src/test/resources/features",
         glue = "steps",
         dryRun = false,
-        tags = "@TC-104"
+        tags = "@TC-110"
 )
 public class Runner {
 }

@@ -102,6 +102,7 @@ public class YardsAPISteps {
     String id;
     Map<String, Object> requestData;
     Response response;
+    Map<String,Object> dataToUpdate;
 
     @Given("user create yard with post api call")
     public void user_create_yard_with_post_api_call(io.cucumber.datatable.DataTable dataTable) {
@@ -232,6 +233,44 @@ public class YardsAPISteps {
     public void user_validates_authorization_error_message(String expectedErrorMessage) {
         String actualErrorMessage=response.body().jsonPath().getString("detail");
         Assert.assertEquals(expectedErrorMessage,actualErrorMessage);
+    }
+
+    @When("user updates yard name with patch api call")
+    public void user_updates_yard_name_with_patch_api_call(io.cucumber.datatable.DataTable dataTable) {
+        dataToUpdate=dataTable.asMap(String.class, Object.class);
+        /*
+        Update Yard
+         */
+        response=given().baseUri("http://3.17.122.25/en-us/api/v2")
+                .and().accept("application/json")
+                .and().contentType("application/json")
+                .and().header("Authorization","Token 9d3994dd2afd7d1d8ae9ecf4d77e45932bb210d6")
+                .and().body("{\n" +
+                        "  \"location\": \""+dataToUpdate.get("yardName")+"\",\n" +
+                        "  \"name\": \"Y654\",\n" +
+                        "  \"status\": \"active\",\n" +
+                        "  \"address\": \"111 Redwood Dr\",\n" +
+                        "  \"apt_suite_company_co\": \"423\",\n" +
+                        "  \"city\": \"Austin\",\n" +
+                        "  \"state\": \"TX\",\n" +
+                        "  \"zip_code\": \"78745\",\n" +
+                        "  \"spots\": 1234,\n" +
+                        "  \"warning\": \"\",\n" +
+                        "  \"notes\": \"\",\n" +
+                        "  \"notes_popup\": \"\",\n" +
+                        "  \"yard_pictures\": [],\n" +
+                        "  \"contacts\": [],\n" +
+                        "  \"count_phone\": 0\n" +
+                        "}")
+                .and().log().all()
+                .when().patch("/yards/"+id+"/");
+        response.then().log().all();
+    }
+    @Then("user validates yard name is updated")
+    public void user_validates_yard_name_is_updated() {
+        String expectedYardName=dataToUpdate.get("yardName").toString();
+        String actualYardName=response.body().jsonPath().getString("location");
+        Assert.assertEquals(expectedYardName,actualYardName);
     }
 
 }
