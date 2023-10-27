@@ -68,7 +68,6 @@ public class BookingAPISteps {
                 .and().log().all()
                 .when().get("/booking/"+bookingId);
         response.then().log().all();
-        response.then().statusCode(200);
     }
 
     @Then("user validates created data matches with get response")
@@ -124,6 +123,25 @@ public class BookingAPISteps {
         RequestBooking responseData=response.body().as(RequestBooking.class); // JSON -> RequestBooking === Deserialization
         Assert.assertEquals(updatedData.get("firstname").toString(), responseData.getFirstname());
         Assert.assertEquals(updatedData.get("checkin").toString(), responseData.getBookingdates().getCheckin());
+    }
+
+    @When("user deletes booking with delete api call")
+    public void user_deletes_booking_with_delete_api_call() {
+        /*
+        DELETE Call
+         */
+        response=given().baseUri("https://restful-booker.herokuapp.com")
+                .and().header("Authorization", "Basic YWRtaW46cGFzc3dvcmQxMjM=")
+                .and().header("Cookie","token=<1ddf634fc5bd306>")
+                .and().log().all()
+                .when().delete("/booking/"+bookingId);
+        response.then().log().all();
+        response.then().statusCode(201);
+    }
+
+    @Then("user validates {int} status code")
+    public void user_validates_status_code(Integer statusCode) {
+        response.then().statusCode(statusCode);
     }
 
 }
