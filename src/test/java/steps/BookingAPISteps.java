@@ -19,6 +19,8 @@ public class BookingAPISteps {
     Response response;
     String bookingId;
     RequestBooking requestBooking;
+    Map<String,Object> updatedData;
+    Bookingdates bookingdates;
 
     @Given("user create booking with post api call with data")
     public void user_create_booking_with_post_api_call_with_data(io.cucumber.datatable.DataTable dataTable) {
@@ -35,7 +37,7 @@ public class BookingAPISteps {
         requestBooking.setDepositpaid(Boolean.valueOf(requestMap.get("depositpaid").toString()));
         requestBooking.setAdditionalneeds(requestMap.get("additionalneeds").toString());
 
-        Bookingdates bookingdates=new Bookingdates();
+        bookingdates=new Bookingdates();
         bookingdates.setCheckin(requestMap.get("checkin").toString());
         bookingdates.setCheckout(requestMap.get("checkout").toString());
 
@@ -91,6 +93,37 @@ public class BookingAPISteps {
         Assert.assertEquals(requestBooking.getFirstname(), booking.getFirstname());
         //...
 
+    }
+
+    @When("user updates created booking with put api call with data")
+    public void user_updates_created_booking_with_put_api_call_with_data(io.cucumber.datatable.DataTable dataTable) {
+        updatedData=dataTable.asMap(String.class,Object.class);
+
+        requestBooking.setFirstname(updatedData.get("firstname").toString());
+        bookingdates.setCheckin(updatedData.get("checkin").toString());
+        requestBooking.setBookingdates(bookingdates);
+
+        /*
+        PUT Call
+         */
+        response=given().baseUri("https://restful-booker.herokuapp.com")
+                .and().accept("application/json")
+                .and().contentType("application/json")
+                .and().header("Authorization", "Basic YWRtaW46cGFzc3dvcmQxMjM=")
+                .and().body(requestBooking)
+                .and().log().all()
+                .when().put("/booking/"+bookingId);
+        response.then().log().all();
+        response.then().statusCode(200);
+    }
+
+    @Then("user validates updated data matches with get response")
+    public void user_validates_updated_data_matches_with_get_response() {
+        // updatedData -> expected data
+        // response from get call -> actual data
+        RequestBooking responseData=response.body().as(RequestBooking.class); // JSON -> RequestBooking === Deserialization
+        Assert.assertEquals(updatedData.get("firstname").toString(), responseData.getFirstname());
+        Assert.assertEquals(updatedData.get("checkin").toString(), responseData.getBookingdates().getCheckin());
     }
 
 }
