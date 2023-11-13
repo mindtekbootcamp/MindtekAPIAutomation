@@ -127,12 +127,24 @@ public class BookingAPISteps {
 
     @When("user deletes booking with delete api call")
     public void user_deletes_booking_with_delete_api_call() {
+
+        response=given().baseUri("https://restful-booker.herokuapp.com")
+                .and().contentType("application/json")
+                .and().body("{\n" +
+                        "    \"username\" : \"admin\",\n" +
+                        "    \"password\" : \"password123\"\n" +
+                        "}")
+                .and().log().all()
+                .when().post("/auth");
+        response.then().log().all();
+        String token=response.body().jsonPath().getString("token");
+
         /*
         DELETE Call
          */
         response=given().baseUri("https://restful-booker.herokuapp.com")
                 .and().header("Authorization", "Basic YWRtaW46cGFzc3dvcmQxMjM=")
-                .and().header("Cookie","token=<1ddf634fc5bd306>")
+                .and().header("Cookie","token=<"+token+">")
                 .and().log().all()
                 .when().delete("/booking/"+bookingId);
         response.then().log().all();

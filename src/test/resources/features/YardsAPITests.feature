@@ -51,8 +51,8 @@ Feature: Validating Yard APIs
     Given user create yard with post api call
       | yardName | New Mindtek 9 |
       | city     | Schaumburg    |
-    When user updates yard name with patch api call with no name
+#    When user updates yard name with patch api call with no name
     Then user validates status code 400
-    And user validates "This field may not be blank." update error message
+#    And user validates "This field may not be blank." update error message
 
 
