@@ -86,8 +86,8 @@ public class BookingAPISteps {
 
         // GSON Library
         // Json -> Java Object
-        Gson gson=new Gson();
-        RequestBooking booking1=gson.fromJson(response.body().toString(),RequestBooking.class);
+//        Gson gson=new Gson();
+//        RequestBooking booking1=gson.fromJson(response.body().toString(),RequestBooking.class);
 
         Assert.assertEquals(requestBooking.getFirstname(), booking.getFirstname());
         //...

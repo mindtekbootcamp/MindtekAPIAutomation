@@ -19,7 +19,7 @@ Feature: Validating Yard APIs
       | name with special characters | 400        | Enter the correct data (leters, digits and '- & \| . ()' symbols |
 #      | with closed status           | 400        | \"closed\" is not a valid choice.                                |
 
-  @TC-103 @smoke @regression
+  @TC-103 @regression
   Scenario Outline: Validating Get Yards query parameters
     Given user gets yards with get yard api call with limit <limit>
     Then user validates response includes <limit> yards
@@ -46,7 +46,7 @@ Feature: Validating Yard APIs
     Then user validates status code 200
     And user validates yard name is updated
 
-  @TC-105 @smoke @regression
+  @TC-105 @regression
   Scenario: Validating updated yard api call
     Given user create yard with post api call
       | yardName | New Mindtek 9 |
